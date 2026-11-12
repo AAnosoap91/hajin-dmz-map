@@ -1,0 +1,19 @@
+
+[
+  {
+    "id": "key_001",
+    "name": "长山空军基地军械库钥匙",
+    "aliases": [
+      "长山军械库",
+      "空军基地军械库"
+    ],
+    "area": "长山空军基地",
+    "target": "军械库门",
+    "x": null,
+    "y": null,
+    "description": "尚未采集真实位置",
+    "image": null,
+    "verified": false,
+    "source": ""
+  }
+]
