@@ -1,4 +1,3 @@
-
 [
   {
     "id": "key_001",
@@ -12,6 +11,19 @@
     "x": null,
     "y": null,
     "description": "尚未采集真实位置",
+    "image": null,
+    "verified": false,
+    "source": ""
+  },
+  {
+    "id": "key_002",
+    "name": "公用设施维护仓库",
+    "aliases": [],
+    "area": "",
+    "target": "",
+    "x": 1413,
+    "y": 980,
+    "description": "",
     "image": null,
     "verified": false,
     "source": ""

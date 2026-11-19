@@ -20,18 +20,26 @@ const bounds: [[number, number], [number, number]] = [
 ]
 
 
+type KeyColor = 'blue' | 'purple' | 'gold' | 'red'
+
 type KeyLocation = {
   id: string
   name: string
   aliases: string[]
-  area: string
-  target: string
+  color?: KeyColor
   x: number | null
   y: number | null
   description: string
   image: string | null
   verified: boolean
   source: string
+}
+
+const KEY_COLORS: Record<KeyColor, string> = {
+  blue: '#3B82F6',
+  purple: '#A855F7',
+  gold: '#EAB308',
+  red: '#EF4444'
 }
 
 
@@ -111,9 +119,7 @@ function App() {
     ? keys.filter(key => {
         const text = [
           key.name,
-          key.area,
-          key.target,
-          ...key.aliases
+          ...(key.aliases ?? [])
         ].join(' ').toLowerCase()
 
         return text.includes(query.trim().toLowerCase())
@@ -124,6 +130,10 @@ function App() {
     setSelectedKey(key)
     setQuery(key.name)
   }
+
+  const keyColor = selectedKey?.color
+  ? KEY_COLORS[selectedKey.color]
+  : '#94A3B8'
 
   return (
     <div className="app">
@@ -148,7 +158,16 @@ function App() {
                 onClick={() => selectKey(key)}
               >
                 <strong>{key.name}</strong>
-                <span>{key.area}</span>
+                <span>
+                  {key.color
+                    ? ({
+                        blue: '蓝色',
+                        purple: '紫色',
+                        gold: '金色',
+                        red: '红色'
+                      }[key.color] + '钥匙')
+                    : '颜色未录入'}
+                </span>
               </button>
             ))}
           </div>
@@ -184,18 +203,24 @@ function App() {
               ]}
               radius={10}
               pathOptions={{
-                color: '#ffcc00',
-                fillColor: '#ffcc00',
+                color: keyColor,
+                fillColor: keyColor,
                 fillOpacity: 0.9
               }}
             >
               <Popup>
                 <strong>{selectedKey.name}</strong>
-                <p>区域：{selectedKey.area}</p>
-                <p>开启：{selectedKey.target}</p>
-                {!selectedKey.verified && (
-                  <p>⚠️ 位置尚未核实</p>
-                )}
+                <p>
+                  钥匙颜色：
+                  {selectedKey.color
+                    ? ({
+                        blue: '蓝色',
+                        purple: '紫色',
+                        gold: '金色',
+                        red: '红色'
+                      }[selectedKey.color])
+                    : '未录入'}
+                </p>
               </Popup>
             </CircleMarker>
           )}
