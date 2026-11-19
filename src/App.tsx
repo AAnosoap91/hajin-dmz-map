@@ -61,7 +61,7 @@ function MapController({
         selectedKey.y !== null) {
       map.flyTo(
         [SIZE - selectedKey.y, selectedKey.x],
-        0,
+        1,
         { duration: 1.2 }
       )
     }
@@ -131,10 +131,6 @@ function App() {
     setQuery(key.name)
   }
 
-  const keyColor = selectedKey?.color
-  ? KEY_COLORS[selectedKey.color]
-  : '#94A3B8'
-
   return (
     <div className="app">
       <header className="header">
@@ -147,7 +143,10 @@ function App() {
           type="text"
           placeholder="搜索钥匙、区域或箱子..."
           value={query}
-          onChange={e => setQuery(e.target.value)}
+          onChange={e => {
+            setQuery(e.target.value)
+            setSelectedKey(null)
+          }}
         />
 
         {results.length > 0 && (
@@ -193,37 +192,65 @@ function App() {
           {import.meta.env.DEV && (
             <ClickHandler onClick={setClickedPoint} />
           )}
-          {selectedKey &&  
-           selectedKey.x !== null &&
-           selectedKey.y !== null && (
-            <CircleMarker
-              center={[
-                SIZE - selectedKey.y,
-                selectedKey.x
-              ]}
-              radius={10}
-              pathOptions={{
-                color: keyColor,
-                fillColor: keyColor,
-                fillOpacity: 0.9
+          
+{/* 显示所有已经录入坐标的钥匙 */}
+{keys
+  .filter(key =>
+    key.x !== null &&
+    key.y !== null
+  )
+  .map(key => {
+    const isSelected = selectedKey?.id === key.id
+
+    const color = key.color
+      ? KEY_COLORS[key.color]
+      : '#94A3B8'
+
+    return (
+      <CircleMarker
+        key={key.id}
+        center={[
+          SIZE - key.y!,
+          key.x!
+        ]}
+        radius={isSelected ? 13 : 6}
+        pathOptions={{
+          color: isSelected ? '#ffffff' : color,
+          weight: isSelected ? 4 : 2,
+          fillColor: color,
+          fillOpacity: isSelected ? 1 : 0.85
+        }}
+      >
+        <Popup>
+          <strong>{key.name}</strong>
+          <p>
+            颜色：{
+              key.color
+                ? ({
+                    blue: '蓝色',
+                    purple: '紫色',
+                    gold: '金色',
+                    red: '红色'
+                  }[key.color])
+                : '未录入'
+            }
+          </p>
+          {key.image && (
+            <img
+              src={`${import.meta.env.BASE_URL}${key.image}`}
+              alt={key.name}
+              style={{
+                width: '220px',
+                maxWidth: '100%',
+                borderRadius: '6px'
               }}
-            >
-              <Popup>
-                <strong>{selectedKey.name}</strong>
-                <p>
-                  钥匙颜色：
-                  {selectedKey.color
-                    ? ({
-                        blue: '蓝色',
-                        purple: '紫色',
-                        gold: '金色',
-                        red: '红色'
-                      }[selectedKey.color])
-                    : '未录入'}
-                </p>
-              </Popup>
-            </CircleMarker>
+            />
           )}
+        </Popup>
+      </CircleMarker>
+    )
+  })}
+
 
           {clickedPoint && (
             <CircleMarker
