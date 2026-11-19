@@ -87,6 +87,22 @@ function ClickHandler({
   return null
 }
 
+
+function ZoomTracker({
+  onZoomChange
+}: {
+  onZoomChange: (zoom: number) => void
+}) {
+  const map = useMapEvents({
+    zoomend() {
+      onZoomChange(map.getZoom())
+    }
+  })
+
+  return null
+}
+
+
 function App() {
   const [keys, setKeys] = useState<KeyLocation[]>([])
   const [query, setQuery] = useState('')
@@ -94,7 +110,7 @@ function App() {
     useState<KeyLocation | null>(null)
   const [clickedPoint, setClickedPoint] =
     useState<Point | null>(null)
-
+  const [mapZoom, setMapZoom] = useState(-1)
   function copyCoordinates() {
   if (!clickedPoint) return
 
@@ -106,7 +122,7 @@ function App() {
   navigator.clipboard.writeText(coordinates)
     .then(() => alert('坐标已复制！'))
     .catch(() => alert('复制失败，请手动记录坐标'))
-}
+  }
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}keys.json`)
@@ -130,6 +146,10 @@ function App() {
     setSelectedKey(key)
     setQuery(key.name)
   }
+  const markerScale = Math.pow(1.3, mapZoom)
+
+  const normalRadius = 6 * markerScale
+  const selectedRadius = 13 * markerScale
 
   return (
     <div className="app">
@@ -188,6 +208,7 @@ function App() {
             bounds={bounds}
           />
 
+          <ZoomTracker onZoomChange={setMapZoom} />
           <MapController selectedKey={selectedKey} />
           {import.meta.env.DEV && (
             <ClickHandler onClick={setClickedPoint} />
@@ -213,10 +234,10 @@ function App() {
           SIZE - key.y!,
           key.x!
         ]}
-        radius={isSelected ? 13 : 6}
+        radius={isSelected ? selectedRadius : normalRadius}
         pathOptions={{
           color: isSelected ? '#ffffff' : color,
-          weight: isSelected ? 4 : 2,
+          weight: (isSelected ? 3 : 1.5) * markerScale,
           fillColor: color,
           fillOpacity: isSelected ? 1 : 0.85
         }}

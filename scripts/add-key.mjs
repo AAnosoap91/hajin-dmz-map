@@ -2,92 +2,109 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import readline from 'node:readline/promises'
-import { stdin as input, stdout as output } from 'node:process'
+import { stdin, stdout } from 'node:process'
 
 const filePath = path.resolve('public/keys.json')
 
-const rl = readline.createInterface({ input, output })
+const colorMap = {
+  blue: 'blue',
+  purple: 'purple',
+  gold: 'gold',
+  red: 'red',
+  蓝色: 'blue',
+  紫色: 'purple',
+  金色: 'gold',
+  红色: 'red'
+}
 
-try {
-  // 1. 读取现有钥匙信息
+async function main() {
   const keys = JSON.parse(
     fs.readFileSync(filePath, 'utf8')
   )
 
   if (!Array.isArray(keys)) {
-    throw new Error('keys.json 必须是数组')
+    throw new Error('keys.json 格式错误，必须是数组')
   }
 
-  // 2. 输入新钥匙信息
-  console.log('\n=== HAJIN DMZ 钥匙录入工具 ===\n')
+  let [name, xText, yText, colorText] =
+    process.argv.slice(2)
 
-  const name = (await rl.question('钥匙名称：')).trim()
-  const xInput = (await rl.question('X 坐标：')).trim()
-  const yInput = (await rl.question('Y 坐标：')).trim()
-  const colorInput = (
-  await rl.question('钥匙颜色（蓝色/紫色/金色/红色）：')
-).trim()
+  // 没有提供参数时，使用交互模式
+  if (process.argv.length <= 2) {
+    const rl = readline.createInterface({
+      input: stdin,
+      output: stdout
+    })
 
-const colorMap = {
-  '蓝色': 'blue',
-  '紫色': 'purple',
-  '金色': 'gold',
-  '红色': 'red'
-}
+    try {
+      name = await rl.question('钥匙名称：')
+      xText = await rl.question('X 坐标：')
+      yText = await rl.question('Y 坐标：')
+      colorText = await rl.question(
+        '颜色（蓝色/紫色/金色/红色）：'
+      )
+    } finally {
+      rl.close()
+    }
+  }
 
-const color = colorMap[colorInput]
+  name = name?.trim()
+  const x = Number(xText)
+  const y = Number(yText)
+  const color = colorMap[colorText?.trim()]
 
-if (!color) {
-  throw new Error('颜色只能是蓝色、紫色、金色或红色')
-}
-
-  const x = Number(xInput)
-  const y = Number(yInput)
-
-  // 3. 检查输入
   if (!name) {
     throw new Error('钥匙名称不能为空')
   }
 
   if (
-    !xInput || !yInput ||
-    !Number.isFinite(x) || !Number.isFinite(y) ||
+    !xText?.trim() ||
+    !yText?.trim() ||
+    !Number.isFinite(x) ||
+    !Number.isFinite(y) ||
     x < 0 || x > 2048 ||
     y < 0 || y > 2048
   ) {
-    throw new Error('X/Y 坐标必须在 0～2048 之间')
+    throw new Error('坐标必须在 0～2048 之间')
   }
 
-  // 避免重复添加同名钥匙
-  if (keys.some(key => key.name === name)) {
-    throw new Error('这把钥匙已经存在，请检查 keys.json')
+  if (!color) {
+    throw new Error('颜色只能是蓝、紫、金、红')
   }
 
-  // 4. 自动生成唯一 ID
-  const existingIds = new Set(keys.map(key => key.id))
-  let number = 1
+  if (keys.some(
+    key => key.name.trim().toLowerCase() ===
+      name.toLowerCase()
+  )) {
+    throw new Error('该钥匙已存在，请勿重复添加')
+  }
+
+  // 自动生成不重复的 ID
+  const existingIds = new Set(
+    keys.map(key => key.id)
+  )
+
+  let n = 1
   let id
 
   do {
-    id = `key_${String(number).padStart(3, '0')}`
-    number++
+    id = `key_${String(n).padStart(3, '0')}`
+    n++
   } while (existingIds.has(id))
 
-  // 5. 创建新钥匙
   const newKey = {
-  id,
-  name,
-  aliases: [],
-  color,
-  x,
-  y,
-  description: '',
-  image: null,
-  verified: false,
-  source: ''
-}
+    id,
+    name,
+    aliases: [],
+    color,
+    x,
+    y,
+    description: '',
+    image: null,
+    verified: false,
+    source: ''
+  }
 
-  // 6. 添加到数组并写回 JSON 文件
   keys.push(newKey)
 
   fs.writeFileSync(
@@ -96,16 +113,12 @@ if (!color) {
     'utf8'
   )
 
-  console.log('\n✓ 钥匙添加成功！')
-  console.log(`编号：${id}`)
-  console.log(`名称：${name}`)
-  console.log(`坐标：X ${x}, Y ${y}`)
-  console.log('图片：暂无')
-  console.log('保存位置：public/keys.json')
-
-} catch (error) {
-  console.error('\n✗ 添加失败：', error.message)
-  process.exitCode = 1
-} finally {
-  rl.close()
+  console.log('\n✓ 添加成功！')
+  console.log(`${name} | ${color} | X:${x} Y:${y}`)
+  console.log(`已保存到：${filePath}`)
 }
+
+main().catch(error => {
+  console.error('✗', error.message)
+  process.exitCode = 1
+})
