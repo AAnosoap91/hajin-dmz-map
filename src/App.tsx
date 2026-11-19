@@ -148,8 +148,8 @@ function App() {
   }
   const markerScale = Math.pow(1.3, mapZoom)
 
-  const normalRadius = 6 * markerScale
-  const selectedRadius = 13 * markerScale
+  const normalRadius = 4 * markerScale
+  const selectedRadius = 5.5 * markerScale
 
   return (
     <div className="app">
@@ -186,6 +186,11 @@ function App() {
                         red: '红色'
                       }[key.color] + '钥匙')
                     : '颜色未录入'}
+                    {results.filter(item => item.name === key.name).length > 1 && (
+                      <small>
+                        位置：X {key.x} · Y {key.y}
+                      </small>
+                      )}
                 </span>
               </button>
             ))}
@@ -237,7 +242,7 @@ function App() {
         radius={isSelected ? selectedRadius : normalRadius}
         pathOptions={{
           color: isSelected ? '#ffffff' : color,
-          weight: (isSelected ? 3 : 1.5) * markerScale,
+          weight: (isSelected ? 2 : 1.5) * markerScale,
           fillColor: color,
           fillOpacity: isSelected ? 1 : 0.85
         }}

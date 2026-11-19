@@ -58,5 +58,101 @@
     "image": null,
     "verified": false,
     "source": ""
+  },
+  {
+    "id": "key_006",
+    "name": "未来医院配电室",
+    "aliases": [],
+    "color": "blue",
+    "x": 1118,
+    "y": 1075,
+    "description": "",
+    "image": null,
+    "verified": false,
+    "source": ""
+  },
+  {
+    "id": "key_007",
+    "name": "机械师小屋",
+    "aliases": [],
+    "color": "blue",
+    "x": 1039,
+    "y": 1055,
+    "description": "",
+    "image": null,
+    "verified": false,
+    "source": ""
+  },
+  {
+    "id": "key_008",
+    "name": "铁路仓库",
+    "aliases": [],
+    "color": "blue",
+    "x": 996,
+    "y": 1028,
+    "description": "",
+    "image": null,
+    "verified": false,
+    "source": ""
+  },
+  {
+    "id": "key_009",
+    "name": "枪店武器柜",
+    "aliases": [],
+    "color": "blue",
+    "x": 1015,
+    "y": 948,
+    "description": "",
+    "image": null,
+    "verified": false,
+    "source": ""
+  },
+  {
+    "id": "key_010",
+    "name": "发射井控制室",
+    "aliases": [],
+    "color": "blue",
+    "x": 611,
+    "y": 717,
+    "description": "",
+    "image": null,
+    "verified": false,
+    "source": ""
+  },
+  {
+    "id": "key_011",
+    "name": "黑市武器柜",
+    "aliases": [],
+    "color": "blue",
+    "x": 732,
+    "y": 701,
+    "description": "",
+    "image": null,
+    "verified": false,
+    "source": ""
+  },
+  {
+    "id": "key_012",
+    "name": "发射井控制室",
+    "aliases": [],
+    "color": "blue",
+    "x": 774,
+    "y": 804,
+    "description": "",
+    "image": null,
+    "verified": false,
+    "source": ""
+  },
+  {
+    "id": "key_013",
+    "name": "监狱营地储藏室",
+    "aliases": [],
+    "color": "blue",
+    "x": 690,
+    "y": 854,
+    "description": "",
+    "image": null,
+    "verified": false,
+    "source": ""
   }
 ]

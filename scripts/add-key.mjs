@@ -72,12 +72,16 @@ async function main() {
     throw new Error('颜色只能是蓝、紫、金、红')
   }
 
-  if (keys.some(
-    key => key.name.trim().toLowerCase() ===
-      name.toLowerCase()
-  )) {
-    throw new Error('该钥匙已存在，请勿重复添加')
-  }
+  // 只阻止名称和坐标完全相同的重复记录
+const duplicate = keys.some(key =>
+  key.name.trim().toLowerCase() === name.toLowerCase() &&
+  key.x === x &&
+  key.y === y
+)
+
+if (duplicate) {
+  throw new Error('相同名称和坐标的记录已经存在')
+}
 
   // 自动生成不重复的 ID
   const existingIds = new Set(
