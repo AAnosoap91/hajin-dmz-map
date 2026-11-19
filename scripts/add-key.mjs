@@ -7,10 +7,12 @@ import { stdin, stdout } from 'node:process'
 const filePath = path.resolve('public/keys.json')
 
 const colorMap = {
+  green: 'green',
   blue: 'blue',
   purple: 'purple',
   gold: 'gold',
   red: 'red',
+  绿色: 'green',
   蓝色: 'blue',
   紫色: 'purple',
   金色: 'gold',
@@ -41,7 +43,7 @@ async function main() {
       xText = await rl.question('X 坐标：')
       yText = await rl.question('Y 坐标：')
       colorText = await rl.question(
-        '颜色（蓝色/紫色/金色/红色）：'
+        '颜色（绿色/蓝色/紫色/金色/红色）：'
       )
     } finally {
       rl.close()
@@ -69,7 +71,7 @@ async function main() {
   }
 
   if (!color) {
-    throw new Error('颜色只能是蓝、紫、金、红')
+    throw new Error('颜色只能是绿、蓝、紫、金、红')
   }
 
   // 只阻止名称和坐标完全相同的重复记录

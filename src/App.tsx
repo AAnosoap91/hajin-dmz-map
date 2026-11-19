@@ -156,14 +156,14 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>HAJIN DMZ MAP</h1>
-        <p>交互式钥匙与地点查询地图</p>
+        <h1>HAJIN</h1>
+        <p>DMZ 钥匙搜索</p>
       </header>
 
       <div className="search-panel">
         <input
           type="text"
-          placeholder="搜索钥匙、区域或箱子..."
+          placeholder="搜索钥匙位置"
           value={query}
           onChange={e => {
             setQuery(e.target.value)
