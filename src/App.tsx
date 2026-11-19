@@ -5,6 +5,7 @@ import {
   ImageOverlay,
   CircleMarker,
   Popup,
+  Tooltip,
   useMap,
   useMapEvents
 } from 'react-leaflet'
@@ -20,7 +21,7 @@ const bounds: [[number, number], [number, number]] = [
 ]
 
 
-type KeyColor = 'blue' | 'purple' | 'gold' | 'red'
+type KeyColor = 'green' |'blue' | 'purple' | 'gold' | 'red'
 
 type KeyLocation = {
   id: string
@@ -36,6 +37,7 @@ type KeyLocation = {
 }
 
 const KEY_COLORS: Record<KeyColor, string> = {
+  green: '#06b354',
   blue: '#3B82F6',
   purple: '#A855F7',
   gold: '#EAB308',
@@ -180,6 +182,7 @@ function App() {
                 <span>
                   {key.color
                     ? ({
+                        green: '绿色',
                         blue: '蓝色',
                         purple: '紫色',
                         gold: '金色',
@@ -253,6 +256,7 @@ function App() {
             颜色：{
               key.color
                 ? ({
+                    green: '绿色',
                     blue: '蓝色',
                     purple: '紫色',
                     gold: '金色',
@@ -273,6 +277,31 @@ function App() {
             />
           )}
         </Popup>
+
+        <Tooltip
+          direction="top"
+          offset={[0, -8]}
+          opacity={0.95}
+          sticky={false}
+        >
+          <div>
+            <strong>{key.name}</strong>
+            <div>
+              {
+                key.color
+                  ? ({
+                      green: '绿色',
+                      blue: '蓝色',
+                      purple: '紫色',
+                      gold: '金色',
+                      red: '红色'
+                    }[key.color])
+                  : '未录入'
+              }钥匙
+            </div>
+          </div>
+        </Tooltip>
+
       </CircleMarker>
     )
   })}
